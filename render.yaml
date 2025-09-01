@@ -1,0 +1,40 @@
+services:
+  - type: web
+    name: hazirgiyim-backend
+    runtime: node
+    region: frankfurt # or oregon
+    plan: standard # or free for testing
+    buildCommand: npm ci && npm run build:prod
+    startCommand: npm run start:prod
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: hazirgiyim-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: hazirgiyim-redis
+          property: connectionString
+      - fromGroup: hazirgiyim-secrets
+    autoDeploy: true
+    
+databases:
+  - name: hazirgiyim-db
+    plan: standard # or free for testing
+    region: frankfurt # same as service
+    databaseName: medusa
+    user: medusa
+    
+services:
+  - type: redis
+    name: hazirgiyim-redis
+    plan: standard # or free for testing
+    region: frankfurt # same as service
+    maxMemory: 512 # MB
+    evictionPolicy: allkeys-lru
