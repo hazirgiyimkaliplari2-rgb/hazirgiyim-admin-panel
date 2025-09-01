@@ -1,0 +1,15 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": ".medusa/server",
+  "framework": "other",
+  "env": {
+    "DATABASE_URL": "@database_url",
+    "DATABASE_PUBLIC_URL": "@database_public_url",
+    "JWT_SECRET": "@jwt_secret",
+    "COOKIE_SECRET": "@cookie_secret",
+    "NODE_ENV": "production",
+    "STORE_CORS": "*",
+    "ADMIN_CORS": "*",
+    "AUTH_CORS": "*"
+  }
+}
