@@ -1,10 +1,10 @@
 services:
   - type: web
-    name: hazirgiyim-backend
+    name: hazirgiyim-admin-panel
     runtime: node
-    region: frankfurt # or oregon
-    plan: standard # or free for testing
-    buildCommand: npm ci && npm run build:prod
+    region: frankfurt
+    plan: free
+    buildCommand: npm ci && npm run build
     startCommand: npm run start:prod
     healthCheckPath: /health
     envVars:
@@ -13,28 +13,17 @@ services:
       - key: NODE_ENV
         value: production
       - key: DATABASE_URL
-        fromDatabase:
-          name: hazirgiyim-db
-          property: connectionString
-      - key: REDIS_URL
-        fromService:
-          type: redis
-          name: hazirgiyim-redis
-          property: connectionString
-      - fromGroup: hazirgiyim-secrets
+        value: postgresql://postgres:mlwPULVjheuUhbAGixInHBeiiHjVhMDh@yamabiko.proxy.rlwy.net:28022/railway
+      - key: DATABASE_PUBLIC_URL
+        value: postgresql://postgres:mlwPULVjheuUhbAGixInHBeiiHjVhMDh@yamabiko.proxy.rlwy.net:28022/railway
+      - key: JWT_SECRET
+        value: 7U/GHYUboEFqlicugpQ0pLhLkzpk+LVncghPxK1Loog=
+      - key: COOKIE_SECRET
+        value: Snyo90LRQdWI25egm6bXNOybfEGMnVhDDSnddd4De2mM=
+      - key: STORE_CORS
+        value: "*"
+      - key: ADMIN_CORS
+        value: "*"
+      - key: AUTH_CORS
+        value: "*"
     autoDeploy: true
-    
-databases:
-  - name: hazirgiyim-db
-    plan: standard # or free for testing
-    region: frankfurt # same as service
-    databaseName: medusa
-    user: medusa
-    
-services:
-  - type: redis
-    name: hazirgiyim-redis
-    plan: standard # or free for testing
-    region: frankfurt # same as service
-    maxMemory: 512 # MB
-    evictionPolicy: allkeys-lru
